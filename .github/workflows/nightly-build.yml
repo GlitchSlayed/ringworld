@@ -24,6 +24,9 @@ jobs:
       - name: Create build directory
         run: mkdir build && cd build
 
+      - name: Debug: List repository contents
+        run: ls -al .. # List files in the parent directory (repository root)
+
       - name: Generate build files
         run: cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake
 
@@ -34,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ringworld-build-artifacts
-          path: build
+          path: build # Assumes artifacts are in the 'build' directory

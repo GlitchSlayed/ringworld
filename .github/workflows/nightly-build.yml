@@ -24,7 +24,7 @@ jobs:
       - name: Create build directory
         run: mkdir build && cd build
 
-      - name: Debug: List repository contents
+      - name: Debug List repository contents
         run: ls -al .. # List files in the parent directory (repository root)
 
       - name: Generate build files

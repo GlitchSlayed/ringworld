@@ -1,0 +1,33 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight UTC every day
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake mingw-w64 python3 lua5.3
+
+      - name: Create build directory
+        run: mkdir build && cd build
+
+      - name: Generate build files
+        run: cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake
+
+      - name: Build the project
+        run: cmake --build .
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ringworld-build-artifacts
+          path: build 

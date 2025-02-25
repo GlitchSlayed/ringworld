@@ -11,15 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults: # Set default working directory for all steps in this job
-      run:
-        working-directory: /home/runner/work/ringworld
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          path: . # Checkout directly into the job's working directory (/home/runner/work/ringworld)
+        uses: actions/checkout@v4 # Default checkout path - repository in /home/runner/work/ringworld
 
       - name: Cache dependencies
         uses: actions/cache@v4
@@ -37,16 +32,10 @@ jobs:
           sudo apt-get install -y cmake mingw-w64 python3 lua5.3
 
       - name: Create build directory
-        run: mkdir build && cd build # 'build' directory will be in /home/runner/work/ringworld
-
-      - name:  List SOURCE DIRECTORY contents
-        run: ls -al . # List contents of current working directory (/home/runner/work/ringworld)
-
-      - name:  Current Working Directory (pwd) - Before CMake
-        run: pwd # Print CWD right before CMake
+        run: mkdir build && cd build # 'build' directory in /home/runner/work/ringworld
 
       - name: Generate build files
-        run: cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./toolchain-i686-w64-mingw32.cmake # Source and toolchain paths relative to CWD
+        run: cmake /home/runner/work/ringworld -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./toolchain-i686-w64-mingw32.cmake # Toolchain path corrected!
 
       - name: Build the project
         run: cmake --build .

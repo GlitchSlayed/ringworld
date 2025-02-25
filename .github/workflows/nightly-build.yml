@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Default checkout path - should be /home/runner/work/ringworld
+        uses: actions/checkout@v4 # Default checkout path - repository in /home/runner/work/ringworld
 
       - name: Cache dependencies
         uses: actions/cache@v4
@@ -22,7 +22,7 @@ jobs:
           path: |
             /usr/share
             /etc
-          key: dependencies-ubuntu-latest # Simple cache key
+          key: dependencies-ubuntu-latest
           restore-keys: |
             dependencies-ubuntu-latest
 
@@ -32,16 +32,10 @@ jobs:
           sudo apt-get install -y cmake mingw-w64 python3 lua5.3
 
       - name: Create build directory
-        run: mkdir /home/runner/work/ringworld/build && cd /home/runner/work/ringworld/build # Absolute build dir
-
-      - name: List SOURCE DIRECTORY contents
-        run: ls -al /home/runner/work/ringworld # List contents of what CMake *should* see as source
-
-      - name: Current Working Directory (pwd) - Before CMake
-        run: pwd # Print CWD right before CMake
+        run: mkdir build && cd build # 'build' directory in /home/runner/work/ringworld
 
       - name: Generate build files
-        run: cmake /home/runner/work/ringworld -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake # Absolute source path, toolchain path relative to source
+        run: cmake /home/runner/work/ringworld/ringworld -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake # Explicit source path
 
       - name: Build the project
         run: cmake --build .
@@ -50,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ringworld-build-artifacts
-          path: build # Artifacts will be in 'build' in /home/runner/work/ringworld
+          path: build # Artifacts in 'build' in /home/runner/work/ringworld

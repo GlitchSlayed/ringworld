@@ -15,6 +15,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          path: ringworld # Checkout code into 'ringworld' subdirectory
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/share
+            /etc
+          key: dependencies-ubuntu-latest # Simple cache key
+          restore-keys: |
+            dependencies-ubuntu-latest
 
       - name: Install dependencies
         run: |
@@ -22,13 +34,10 @@ jobs:
           sudo apt-get install -y cmake mingw-w64 python3 lua5.3
 
       - name: Create build directory
-        run: mkdir build && cd build
-
-      - name: Debug List repository contents
-        run: ls -al .. # List files in the parent directory (repository root)
+        run: cd ringworld && mkdir build && cd build # Navigate to 'ringworld' first
 
       - name: Generate build files
-        run: cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake
+        run: cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../toolchain-i686-w64-mingw32.cmake # CMakeLists.txt is two levels up now
 
       - name: Build the project
         run: cmake --build .
@@ -37,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ringworld-build-artifacts
-          path: build # Assumes artifacts are in the 'build' directory
+          path: ringworld/build # Artifacts will be in 'ringworld/build'

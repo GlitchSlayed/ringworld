@@ -34,10 +34,19 @@ jobs:
           sudo apt-get install -y cmake mingw-w64 python3 lua5.3
 
       - name: Create build directory
-        run: cd ringworld && mkdir build && cd build # Navigate to 'ringworld' first
+        run: cd ringworld && mkdir build && cd build
+
+      - name: List root work directory
+        run: ls -al /home/runner/work # List contents of /home/runner/work
+
+      - name: List ringworld directory
+        run: ls -al /home/runner/work/ringworld # List contents of /home/runner/work/ringworld
+
+      - name: Current Working Directory (pwd)
+        run: pwd # Print current working directory
 
       - name: Generate build files
-        run: cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../toolchain-i686-w64-mingw32.cmake # CMakeLists.txt is two levels up now
+        run: cmake /home/runner/work/ringworld/ringworld -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../toolchain-i686-w64-mingw32.cmake # Absolute path to source
 
       - name: Build the project
         run: cmake --build .

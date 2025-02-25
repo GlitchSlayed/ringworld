@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Removed 'path: ringworld' - default checkout path
+        uses: actions/checkout@v4 # Default checkout path - should be /home/runner/work/ringworld
 
       - name: Cache dependencies
         uses: actions/cache@v4
@@ -32,10 +32,16 @@ jobs:
           sudo apt-get install -y cmake mingw-w64 python3 lua5.3
 
       - name: Create build directory
-        run: mkdir build && cd build # 'build' directory will be created in /home/runner/work/ringworld
+        run: mkdir /home/runner/work/ringworld/build && cd /home/runner/work/ringworld/build # Absolute build dir
+
+      - name: List SOURCE DIRECTORY contents
+        run: ls -al /home/runner/work/ringworld # List contents of what CMake *should* see as source
+
+      - name: Current Working Directory (pwd) - Before CMake
+        run: pwd # Print CWD right before CMake
 
       - name: Generate build files
-        run: cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./toolchain-i686-w64-mingw32.cmake # CMakeLists.txt is now in parent, toolchain in current
+        run: cmake /home/runner/work/ringworld -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake # Absolute source path, toolchain path relative to source
 
       - name: Build the project
         run: cmake --build .

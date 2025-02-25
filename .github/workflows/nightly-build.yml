@@ -1,8 +1,12 @@
-name: Nightly Build
+name: Nightly Build and Commit Trigger
 
 on:
   schedule:
     - cron: '0 0 * * *' # Runs at midnight UTC every day
+  push:
+    branches:
+      - main # or your main branch name (e.g., master)
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   build:
@@ -30,4 +34,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ringworld-build-artifacts
-          path: build 
+          path: build
